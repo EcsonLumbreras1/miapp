@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Notas + Mongo</title>
+  <style>
+    body{font-family:system-ui;margin:2rem;max-width:700px}
+    form{display:flex;gap:.5rem;margin:1rem 0}
+    input{flex:1;padding:.6rem}
+    button{padding:.6rem 1rem}
+    li{margin:.35rem 0}
+  </style>
+</head>
+<body>
+  <h1>Notas (MongoDB)</h1>
+
+  <form id="f">
+    <input id="t" placeholder="Escribe una nota..." />
+    <button>Agregar</button>
+  </form>
+
+  <ul id="list"></ul>
+
+  <script>
+    const f = document.getElementById('f');
+    const t = document.getElementById('t');
+    const list = document.getElementById('list');
+
+    async function load() {
+      const res = await fetch('/api/notes');
+      const data = await res.json();
+      list.innerHTML = data.map(n => `<li>${new Date(n.createdAt).toLocaleString()} — ${n.text}</li>`).join('');
+    }
+
+    f.addEventListener('submit', async e => {
+      e.preventDefault();
+      const text = t.value.trim();
+      if (!text) return;
+      await fetch('/api/notes', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ text }) });
+      t.value = '';
+      load();
+    });
+
+    load();
+  </script>
+</body>
+</html>

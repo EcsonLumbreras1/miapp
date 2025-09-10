@@ -1,0 +1,27 @@
+services:
+  miapp:
+    build: .
+    container_name: miapp
+    restart: unless-stopped
+    environment:
+      # URI que usará la app para conectar a Mongo (mismo network de Docker)
+      - MONGO_URI=mongodb://root:secret@mongo:27017/miapp?authSource=admin
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:7
+    container_name: mongo
+    restart: unless-stopped
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+    ports:
+      - "27017:27017"   # opcional, útil si quieres conectarte desde tu host
+    volumes:
+      - mongo_data:/data/db
+
+volumes:
+  mongo_data:
