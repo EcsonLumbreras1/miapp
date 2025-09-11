@@ -1,0 +1,26 @@
+name: CD
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: [ self-hosted, Linux, X64 ]  # quita 'miapp' salvo que hayas etiquetado el runner
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Sincronizar repo -> /srv/apps/miapp
+        run: |
+          rsync -a --delete --exclude ".git" ./ /srv/apps/miapp/
+
+      - name: Construir y levantar
+        working-directory: /srv/apps/miapp
+        run: |
+          docker compose up -d --build
+          docker compose ps
+          curl -I http://localhost:3000 || true
