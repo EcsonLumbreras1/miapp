@@ -8,7 +8,7 @@ on:
 jobs:
   deploy:
     # Ojo con las mayúsculas: Linux y X64
-    runs-on: [self-hosted, Linux, X64, ecson]
+    runs-on: [self-hosted, Linux, X64, ultrabuilder]
     steps:
       # ...
 
