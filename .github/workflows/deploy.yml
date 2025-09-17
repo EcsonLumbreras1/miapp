@@ -7,10 +7,10 @@ on:
 
 jobs:
   deploy:
-    # Ojo con las mayúsculas: Linux y X64
+    
     runs-on: [self-hosted, Linux, X64, ultrabuilder]
     steps:
-      # ...
+      
 
       - name: Checkout
         uses: actions/checkout@v4
